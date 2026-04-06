@@ -1,2 +1,2 @@
-# Supplements-Stack
+# Mi stack
 pauta diaria suplementos
