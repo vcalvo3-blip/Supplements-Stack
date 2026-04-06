@@ -1,487 +1,378 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mi Stack</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-<style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    background: #0A0A0F;
-    font-family: 'DM Sans', sans-serif;
-    color: #F0EDE8;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Suplementos" />
+  <title>Protocolo Diario · Suplementación</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  .container {
-    width: 100%;
-    max-width: 480px;
-    padding: 32px 20px 60px;
-  }
+    body {
+      min-height: 100vh;
+      min-height: 100dvh;
+      background: linear-gradient(160deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+      color: #f1f5f9;
+      padding-bottom: env(safe-area-inset-bottom, 24px);
+      -webkit-tap-highlight-color: transparent;
+    }
 
-  /* HEADER */
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 28px;
-  }
-  .title {
-    font-family: 'Playfair Display', serif;
-    font-size: 30px;
-    font-weight: 900;
-    letter-spacing: -0.02em;
-    line-height: 1.1;
-  }
-  .subtitle {
-    font-size: 13px;
-    color: rgba(240,237,232,0.4);
-    margin-top: 5px;
-    letter-spacing: 0.02em;
-  }
-  .reset-btn {
-    background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(255,255,255,0.1);
-    color: rgba(240,237,232,0.5);
-    padding: 8px 18px;
-    border-radius: 20px;
-    cursor: pointer;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 11px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    transition: all 0.2s;
-  }
-  .reset-btn:hover {
-    background: rgba(255,255,255,0.1);
-    color: rgba(240,237,232,0.8);
-  }
+    /* HEADER */
+    #header {
+      padding: 52px 20px 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    #header .eyebrow {
+      font-size: 11px;
+      color: #64748b;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    #header h1 {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
 
-  /* PROGRESS */
-  .progress-section { margin-bottom: 28px; }
-  .progress-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 8px;
-  }
-  .progress-label {
-    font-size: 11px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: rgba(240,237,232,0.3);
-  }
-  .progress-count {
-    font-family: 'Playfair Display', serif;
-    font-size: 20px;
-    font-weight: 700;
-  }
-  .progress-count span {
-    font-size: 13px;
-    color: rgba(240,237,232,0.3);
-    font-family: 'DM Sans', sans-serif;
-  }
-  .progress-bar {
-    height: 3px;
-    background: rgba(255,255,255,0.08);
-    border-radius: 2px;
-    overflow: hidden;
-  }
-  .progress-fill {
-    height: 100%;
-    border-radius: 2px;
-    background: linear-gradient(90deg, #F59E0B, #10B981, #8B5CF6);
-    transition: width 0.5s ease;
-  }
+    /* PROGRESS */
+    #progress-wrap { margin-top: 16px; }
+    #progress-labels {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+    #progress-count { font-size: 12px; color: #94a3b8; }
+    #progress-pct   { font-size: 13px; font-weight: 600; color: #94a3b8; transition: color 0.3s; }
+    #progress-track {
+      height: 4px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 99px;
+    }
+    #progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #6366f1, #8b5cf6);
+      border-radius: 99px;
+      transition: width 0.4s ease, background 0.4s ease;
+    }
 
-  /* TABS */
-  .tabs {
-    display: flex;
-    gap: 6px;
-    background: rgba(255,255,255,0.04);
-    border-radius: 14px;
-    padding: 5px;
-    margin-bottom: 24px;
-  }
-  .tab {
-    flex: 1;
-    padding: 10px 6px;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    background: transparent;
-    color: rgba(240,237,232,0.4);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 13px;
-    font-weight: 500;
-    transition: all 0.2s;
-    text-align: center;
-  }
-  .tab .tab-sub {
-    font-size: 10px;
-    margin-top: 2px;
-    opacity: 0.7;
-  }
-  .tab.active { color: #0A0A0F; font-weight: 600; }
-  .tab-desayuno.active { background: #F59E0B; }
-  .tab-comida.active  { background: #10B981; }
-  .tab-cena.active    { background: #8B5CF6; }
+    /* TABS */
+    #tabs {
+      display: flex;
+      padding: 12px 16px;
+      gap: 6px;
+    }
+    .tab-btn {
+      flex: 1;
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: 12px;
+      padding: 8px 4px;
+      cursor: pointer;
+      color: #475569;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      transition: all 0.2s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .tab-btn.active {
+      background: rgba(99,102,241,0.2);
+      border-color: rgba(99,102,241,0.5);
+      color: #a5b4fc;
+    }
+    .tab-emoji { font-size: 18px; line-height: 1; }
+    .tab-label { font-size: 11px; font-weight: 600; letter-spacing: 0.02em; }
+    .tab-count { font-size: 10px; color: #334155; }
+    .tab-btn.active .tab-count { color: #6366f1; }
 
-  /* SECTION LABEL */
-  .section-label {
-    font-size: 11px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: rgba(240,237,232,0.3);
-    margin-bottom: 14px;
-  }
+    /* SUBTITLE */
+    #meal-subtitle {
+      padding: 0 20px 12px;
+      color: #475569;
+      font-size: 12px;
+    }
 
-  /* CARDS */
-  .card {
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 16px;
-    padding: 16px;
-    margin-bottom: 10px;
-    display: flex;
-    align-items: flex-start;
-    gap: 14px;
-    cursor: pointer;
-    transition: all 0.2s;
-    position: relative;
-    overflow: hidden;
-    -webkit-tap-highlight-color: transparent;
-  }
-  .card::before {
-    content: '';
-    position: absolute;
-    left: 0; top: 0; bottom: 0;
-    width: 3px;
-    border-radius: 3px 0 0 3px;
-    background: var(--accent);
-  }
-  .card:hover { background: rgba(255,255,255,0.07); }
-  .card.done { opacity: 0.4; }
+    /* CARDS */
+    #cards {
+      padding: 0 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .supp-btn {
+      width: 100%;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 14px;
+      padding: 14px 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      text-align: left;
+      transition: all 0.2s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .supp-btn.done {
+      background: rgba(16,185,129,0.08);
+      border-color: rgba(16,185,129,0.3);
+    }
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      transition: all 0.2s;
+    }
+    .supp-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: #e2e8f0;
+      transition: all 0.2s;
+    }
+    .supp-btn.done .supp-name {
+      color: #6ee7b7;
+      text-decoration: line-through;
+    }
+    .supp-detail {
+      font-size: 12px;
+      color: #475569;
+      margin-top: 2px;
+      transition: color 0.2s;
+    }
+    .supp-btn.done .supp-detail { color: rgba(74,222,128,0.4); }
+    .check-circle {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 2px solid #334155;
+      background: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all 0.2s;
+      font-size: 13px;
+      font-weight: 700;
+      color: #fff;
+    }
+    .supp-btn.done .check-circle {
+      border-color: #10b981;
+      background: #10b981;
+    }
 
-  .check-circle {
-    width: 26px;
-    height: 26px;
-    border-radius: 50%;
-    border: 2px solid rgba(255,255,255,0.15);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    margin-top: 2px;
-    font-size: 13px;
-    transition: all 0.2s;
-    color: #0A0A0F;
-    font-weight: 700;
-  }
-  .card.done .check-circle {
-    border-color: var(--accent);
-    background: var(--accent);
-  }
+    /* RESET */
+    #reset-wrap { padding: 24px 16px 0; text-align: center; }
+    #reset-btn {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      padding: 10px 28px;
+      color: #475569;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    #reset-btn:active { background: rgba(255,255,255,0.05); }
 
-  .card-body { flex: 1; }
-  .card-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 4px;
-  }
-  .card-name {
-    font-family: 'Playfair Display', serif;
-    font-size: 16px;
-    font-weight: 700;
-    letter-spacing: -0.01em;
-  }
-  .card.done .card-name { text-decoration: line-through; }
-
-  .badge {
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    padding: 3px 8px;
-    border-radius: 20px;
-    background: var(--accent-bg);
-    color: var(--accent);
-    flex-shrink: 0;
-    margin-left: 8px;
-  }
-  .card-dose {
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--accent);
-    margin-bottom: 4px;
-  }
-  .card-note {
-    font-size: 12px;
-    color: rgba(240,237,232,0.35);
-    line-height: 1.4;
-  }
-
-  /* PANEL */
-  .panel { display: none; }
-  .panel.active { display: block; }
-
-  /* WARNING */
-  .warning {
-    background: rgba(245,158,11,0.08);
-    border: 1px solid rgba(245,158,11,0.2);
-    border-radius: 12px;
-    padding: 14px 16px;
-    margin-top: 16px;
-  }
-  .warning-title {
-    font-size: 11px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: #F59E0B;
-    margin-bottom: 6px;
-  }
-  .warning-text {
-    font-size: 12px;
-    color: rgba(240,237,232,0.5);
-    line-height: 1.6;
-  }
-</style>
+    /* FOOTER NOTE */
+    #note {
+      padding: 16px 20px 0;
+      font-size: 11px;
+      color: #334155;
+      text-align: center;
+      line-height: 1.6;
+    }
+  </style>
 </head>
 <body>
 
-<div class="container">
-
-  <!-- HEADER -->
-  <div class="header">
-    <div>
-      <div class="title">Mi Stack</div>
-      <div class="subtitle" id="datetime"></div>
+<div id="header">
+  <div class="eyebrow">Stack de Suplementación</div>
+  <h1>Protocolo Diario</h1>
+  <div id="progress-wrap">
+    <div id="progress-labels">
+      <span id="progress-count" class="progress-count">0 de 15 suplementos</span>
+      <span id="progress-pct">0%</span>
     </div>
-    <button class="reset-btn" onclick="resetAll()">Reiniciar</button>
-  </div>
-
-  <!-- PROGRESS -->
-  <div class="progress-section">
-    <div class="progress-header">
-      <span class="progress-label">Progreso diario</span>
-      <span class="progress-count"><span id="done-count">0</span><span>/7</span></span>
-    </div>
-    <div class="progress-bar">
-      <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+    <div id="progress-track">
+      <div id="progress-bar"></div>
     </div>
   </div>
+</div>
 
-  <!-- TABS -->
-  <div class="tabs">
-    <button class="tab tab-desayuno active" onclick="switchTab('desayuno')">
-      ☀️ Desayuno
-      <div class="tab-sub" id="count-desayuno">0/4</div>
-    </button>
-    <button class="tab tab-comida" onclick="switchTab('comida')">
-      🌤️ Comida
-      <div class="tab-sub" id="count-comida">0/2</div>
-    </button>
-    <button class="tab tab-cena" onclick="switchTab('cena')">
-      🌙 Cena
-      <div class="tab-sub" id="count-cena">0/1</div>
-    </button>
-  </div>
+<div id="tabs"></div>
+<div id="meal-subtitle"></div>
+<div id="cards"></div>
 
-  <!-- DESAYUNO -->
-  <div class="panel active" id="panel-desayuno">
-    <div class="section-label">4 suplementos · ☀️ Desayuno</div>
-
-    <div class="card" id="card-d0" onclick="toggle('d0')"
-      style="--accent:#34D399; --accent-bg:rgba(52,211,153,0.12)">
-      <div class="check-circle" id="check-d0"></div>
-      <div class="card-body">
-        <div class="card-top">
-          <div class="card-name">Altrient Glutatión</div>
-          <span class="badge">Antes</span>
-        </div>
-        <div class="card-dose">1 sobre (450mg)</div>
-        <div class="card-note">15–20 min antes del desayuno, sin calor</div>
-      </div>
-    </div>
-
-    <div class="card" id="card-d1" onclick="toggle('d1')"
-      style="--accent:#F97316; --accent-bg:rgba(249,115,22,0.12)">
-      <div class="check-circle" id="check-d1"></div>
-      <div class="card-body">
-        <div class="card-top">
-          <div class="card-name">Astaxantina</div>
-          <span class="badge">Con</span>
-        </div>
-        <div class="card-dose">1 cápsula (8mg)</div>
-        <div class="card-note">Liposoluble — necesita grasa del desayuno</div>
-      </div>
-    </div>
-
-    <div class="card" id="card-d2" onclick="toggle('d2')"
-      style="--accent:#A78BFA; --accent-bg:rgba(167,139,250,0.12)">
-      <div class="check-circle" id="check-d2"></div>
-      <div class="card-body">
-        <div class="card-top">
-          <div class="card-name">Bio Maca</div>
-          <span class="badge">Con</span>
-        </div>
-        <div class="card-dose">2–3 comprimidos (≈3g)</div>
-        <div class="card-note">Con comida para digestión</div>
-      </div>
-    </div>
-
-    <div class="card" id="card-d3" onclick="toggle('d3')"
-      style="--accent:#60A5FA; --accent-bg:rgba(96,165,250,0.12)">
-      <div class="check-circle" id="check-d3"></div>
-      <div class="card-body">
-        <div class="card-top">
-          <div class="card-name">K2 MK-7</div>
-          <span class="badge">Con</span>
-        </div>
-        <div class="card-dose">1 comprimido (200mcg)</div>
-        <div class="card-note">Liposoluble — necesita grasa del desayuno</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- COMIDA -->
-  <div class="panel" id="panel-comida">
-    <div class="section-label">2 suplementos · 🌤️ Comida</div>
-
-    <div class="card" id="card-c0" onclick="toggle('c0')"
-      style="--accent:#3B82F6; --accent-bg:rgba(59,130,246,0.12)">
-      <div class="check-circle" id="check-c0"></div>
-      <div class="card-body">
-        <div class="card-top">
-          <div class="card-name">Tru Niagen (NR)</div>
-          <span class="badge">Con</span>
-        </div>
-        <div class="card-dose">2 cápsulas (300mg)</div>
-        <div class="card-note">Con comida reduce náuseas</div>
-      </div>
-    </div>
-
-    <div class="card" id="card-c1" onclick="toggle('c1')"
-      style="--accent:#F59E0B; --accent-bg:rgba(245,158,11,0.12)">
-      <div class="check-circle" id="check-c1"></div>
-      <div class="card-body">
-        <div class="card-top">
-          <div class="card-name">R-ALA (Kobho)</div>
-          <span class="badge">Con</span>
-        </div>
-        <div class="card-dose">1 cápsula</div>
-        <div class="card-note">Atenúa picos glucémicos post-ingesta</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- CENA -->
-  <div class="panel" id="panel-cena">
-    <div class="section-label">1 suplemento · 🌙 Cena</div>
-
-    <div class="card" id="card-n0" onclick="toggle('n0')"
-      style="--accent:#34D399; --accent-bg:rgba(52,211,153,0.12)">
-      <div class="check-circle" id="check-n0"></div>
-      <div class="card-body">
-        <div class="card-top">
-          <div class="card-name">NAC 600</div>
-          <span class="badge">Antes/Con</span>
-        </div>
-        <div class="card-dose">1 cápsula (600mg)</div>
-        <div class="card-note">Síntesis de glutatión nocturna</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- WARNING -->
-  <div class="warning">
-    <div class="warning-title">⚠️ Nota clave</div>
-    <div class="warning-text">
-      R-ALA (comida) y NAC (cena) se separan intencionalmente para no competir por cisteína. El Altrient siempre en frío, nunca con calor.
-    </div>
-  </div>
-
+<div id="reset-wrap">
+  <button id="reset-btn" onclick="resetAll()">Reiniciar día</button>
+</div>
+<div id="note">
+  La creatina puede tomarse en cualquier momento · Agitar Wonder-C antes de usar
 </div>
 
 <script>
-  const state = { d0:false, d1:false, d2:false, d3:false, c0:false, c1:false, n0:false };
-  const total = 7;
+const supplements = {
+  ayunas: [
+    { id: "niagen",   name: "Tru Niagen NR",        dose: "600mg · 2 cáps.",      detail: "NAD+ mitocondrial",              color: "#f59e0b" },
+    { id: "nac",      name: "NAC 600mg",             dose: "600mg · 1 cáps.",      detail: "Raibu · precursor glutatión",    color: "#10b981" },
+  ],
+  desayuno: [
+    { id: "sag",      name: "S-Acetyl Glutatión",    dose: "200–300mg · 2-3 cáps.", detail: "California Gold Nutrition",     color: "#10b981" },
+    { id: "wonderc",  name: "Wonder-C Liposomal",    dose: "15ml · 1 cucharada",   detail: "Codeage · Vit C + D3 + Zinc",   color: "#f97316" },
+    { id: "k2",       name: "K2 MK-7",               dose: "200mcg · 1 comp.",     detail: "Nutravita · con grasa",          color: "#8b5cf6" },
+    { id: "astax",    name: "Astaxantina 8mg",        dose: "8mg · 1 cáps.",        detail: "Aldous · con grasa",             color: "#ef4444" },
+    { id: "maca",     name: "Bio Maca",               dose: "4850mg · 2-3 past.",   detail: "Aldous · adaptógeno",            color: "#84cc16" },
+    { id: "creatina", name: "Creatina Creapure®",     dose: "5g · polvo",           detail: "HSN · cualquier momento",        color: "#3b82f6" },
+    { id: "omega3",   name: "Omega-3 Triple",         dose: "2 cáps.",              detail: "Viva Naturals · IFOS · con grasa", color: "#06b6d4" },
+    { id: "spirulina",name: "Spirulina + Chlorella",  dose: "4-5 past.",            detail: "1ª toma",                        color: "#22c55e" },
+  ],
+  comida: [
+    { id: "rala",      name: "R-ALA R-Type",          dose: "1 cáps.",              detail: "Kobho · reciclador glutatión",   color: "#f59e0b" },
+    { id: "maca2",     name: "Bio Maca",               dose: "2-3 past.",            detail: "Aldous · 2ª toma",               color: "#84cc16" },
+    { id: "spirulina2",name: "Spirulina + Chlorella",  dose: "4-5 past.",            detail: "2ª toma",                        color: "#22c55e" },
+  ],
+  noche: [
+    { id: "mag",      name: "Magnesio Bisglicinato",  dose: "400mg · 4 cáps.",      detail: "California Gold TRAACS® · pre-sueño", color: "#6366f1" },
+  ],
+};
 
-  function toggle(id) {
-    state[id] = !state[id];
-    const card  = document.getElementById('card-' + id);
-    const check = document.getElementById('check-' + id);
-    if (state[id]) {
-      card.classList.add('done');
-      check.textContent = '✓';
-    } else {
-      card.classList.remove('done');
-      check.textContent = '';
-    }
-    updateProgress();
-    updateTabCounts();
+const mealConfig = {
+  ayunas:   { label: "Ayunas",   emoji: "🌅", subtitle: "Antes del desayuno" },
+  desayuno: { label: "Desayuno", emoji: "🍳", subtitle: "Con el desayuno"    },
+  comida:   { label: "Comida",   emoji: "🥗", subtitle: "Con la comida"      },
+  noche:    { label: "Noche",    emoji: "🌙", subtitle: "Pre-sueño"           },
+};
+
+function getActiveMeal() {
+  const h = new Date().getHours();
+  if (h >= 6  && h < 8)  return "ayunas";
+  if (h >= 8  && h < 13) return "desayuno";
+  if (h >= 13 && h < 21) return "comida";
+  return "noche";
+}
+
+let activeTab = getActiveMeal();
+let checked = {};
+
+const STORAGE_KEY = "supp_checked_v2";
+const DATE_KEY    = "supp_date_v2";
+
+function loadState() {
+  const today = new Date().toDateString();
+  const savedDate = localStorage.getItem(DATE_KEY);
+  if (savedDate === today) {
+    try { checked = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch(e) { checked = {}; }
+  } else {
+    checked = {};
+    localStorage.setItem(DATE_KEY, today);
+    localStorage.setItem(STORAGE_KEY, "{}");
   }
+}
 
-  function updateProgress() {
-    const done = Object.values(state).filter(Boolean).length;
-    document.getElementById('done-count').textContent = done;
-    document.getElementById('progress-fill').style.width = (done / total * 100) + '%';
-  }
+function saveState() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(checked));
+  localStorage.setItem(DATE_KEY, new Date().toDateString());
+}
 
-  function updateTabCounts() {
-    const d = [state.d0, state.d1, state.d2, state.d3].filter(Boolean).length;
-    const c = [state.c0, state.c1].filter(Boolean).length;
-    const n = [state.n0].filter(Boolean).length;
-    document.getElementById('count-desayuno').textContent = d + '/4';
-    document.getElementById('count-comida').textContent   = c + '/2';
-    document.getElementById('count-cena').textContent     = n + '/1';
-  }
+function allSupps() {
+  return Object.values(supplements).flat();
+}
 
-  function switchTab(tab) {
-    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    document.getElementById('panel-' + tab).classList.add('active');
-    document.querySelector('.tab-' + tab).classList.add('active');
-  }
+function updateProgress() {
+  const total = allSupps().length;
+  const done  = allSupps().filter(s => checked[s.id]).length;
+  const pct   = Math.round((done / total) * 100);
 
-  function resetAll() {
-    Object.keys(state).forEach(k => state[k] = false);
-    document.querySelectorAll('.card').forEach(c => c.classList.remove('done'));
-    document.querySelectorAll('.check-circle').forEach(c => c.textContent = '');
-    updateProgress();
-    updateTabCounts();
-  }
+  document.getElementById("progress-count").textContent = `${done} de ${total} suplementos`;
+  const pctEl = document.getElementById("progress-pct");
+  pctEl.textContent = pct === 100 ? "✓ Completado" : `${pct}%`;
+  pctEl.style.color = pct === 100 ? "#4ade80" : "#94a3b8";
 
-  function updateDateTime() {
-    const now = new Date();
-    const days   = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
-    const months = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
-    const time   = now.toLocaleTimeString('es-ES', { hour:'2-digit', minute:'2-digit' });
-    document.getElementById('datetime').textContent =
-      days[now.getDay()] + ' ' + now.getDate() + ' ' + months[now.getMonth()] + ' · ' + time;
+  const bar = document.getElementById("progress-bar");
+  bar.style.width = pct + "%";
+  bar.style.background = pct === 100
+    ? "linear-gradient(90deg, #4ade80, #22d3ee)"
+    : "linear-gradient(90deg, #6366f1, #8b5cf6)";
+}
 
-    // Auto-tab por hora
-    const h = now.getHours();
-    if      (h >= 6  && h < 12) switchTab('desayuno');
-    else if (h >= 12 && h < 17) switchTab('comida');
-    else                         switchTab('cena');
-  }
+function renderTabs() {
+  const container = document.getElementById("tabs");
+  container.innerHTML = "";
+  Object.entries(mealConfig).forEach(([key, m]) => {
+    const list   = supplements[key] || [];
+    const done   = list.filter(s => checked[s.id]).length;
+    const allDone = done === list.length && list.length > 0;
+    const isActive = key === activeTab;
 
-  updateDateTime();
-  setInterval(() => {
-    const now = new Date();
-    const days   = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
-    const months = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
-    const time   = now.toLocaleTimeString('es-ES', { hour:'2-digit', minute:'2-digit' });
-    document.getElementById('datetime').textContent =
-      days[now.getDay()] + ' ' + now.getDate() + ' ' + months[now.getMonth()] + ' · ' + time;
-  }, 60000);
+    const btn = document.createElement("button");
+    btn.className = "tab-btn" + (isActive ? " active" : "");
+    btn.innerHTML = `
+      <span class="tab-emoji">${allDone ? "✅" : m.emoji}</span>
+      <span class="tab-label">${m.label}</span>
+      <span class="tab-count">${done}/${list.length}</span>
+    `;
+    btn.addEventListener("click", () => {
+      activeTab = key;
+      renderTabs();
+      renderCards();
+      document.getElementById("meal-subtitle").textContent = mealConfig[key].subtitle;
+    });
+    container.appendChild(btn);
+  });
+}
+
+function renderCards() {
+  const list = supplements[activeTab] || [];
+  const container = document.getElementById("cards");
+  container.innerHTML = "";
+
+  list.forEach(s => {
+    const isDone = !!checked[s.id];
+    const btn = document.createElement("button");
+    btn.className = "supp-btn" + (isDone ? " done" : "");
+    btn.innerHTML = `
+      <div class="dot" style="background:${isDone ? "#10b981" : s.color};box-shadow:0 0 6px ${isDone ? "rgba(16,185,129,0.5)" : s.color + "60"}"></div>
+      <div style="flex:1">
+        <div class="supp-name">${s.name}</div>
+        <div class="supp-detail">${s.dose} · ${s.detail}</div>
+      </div>
+      <div class="check-circle">${isDone ? "✓" : ""}</div>
+    `;
+    btn.addEventListener("click", () => {
+      checked[s.id] = !checked[s.id];
+      saveState();
+      renderTabs();
+      renderCards();
+      updateProgress();
+    });
+    container.appendChild(btn);
+  });
+}
+
+function resetAll() {
+  checked = {};
+  saveState();
+  renderTabs();
+  renderCards();
+  updateProgress();
+}
+
+// Init
+loadState();
+document.getElementById("meal-subtitle").textContent = mealConfig[activeTab].subtitle;
+renderTabs();
+renderCards();
+updateProgress();
 </script>
-
 </body>
 </html>
